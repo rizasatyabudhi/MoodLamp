@@ -8,23 +8,6 @@ monkey.patch_socket()
 io = Manager('moodlight.cloudapp.net', 3000)
 moodlamp = io.socket('/')
 
-
-@moodlamp.on_connect()
-def moodlamp_connect():
-    print('connect')
-
-
-@moodlamp.on('state_changed')
-def on_hello(*args):
-    current_state = args[0].encode("utf-8")
-    turn_on_lamp(current_state)
-    print(current_state)
-
-
-moodlamp.connect()
-gevent.wait()
-
-
 def turn_on_lamp(state):
     led.reset()
     if state == 'anger':
@@ -41,3 +24,20 @@ def turn_on_lamp(state):
         led.whiteOn()
     elif state == 'fear':
         led.cyanOn()
+
+
+@moodlamp.on_connect()
+def moodlamp_connect():
+    print('connect')
+
+
+@moodlamp.on('state_changed')
+def on_hello(*args):
+    current_state = args[0].encode("utf-8")
+    turn_on_lamp(current_state)
+    print(current_state)
+
+
+moodlamp.connect()
+gevent.wait()
+
